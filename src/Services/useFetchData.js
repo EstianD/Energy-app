@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 // Import DB functions
-import { addData, checkData } from "./storage";
+import { addDataToDB, checkData, checkCachedTimestamp } from "./storage";
 
 const APIKEY = process.env.REACT_APP_API_KEY;
-const URL = "http://api.eia.gov/series/";
+const URL = "http://api.eia.gov/series/?";
 
 const codes = {
   population: "INTL.4702-33-CODE-THP.A",
-  energy: "INTL.2-2-CODE-BKWH.A",
+  electricity: "INTL.2-2-CODE-BKWH.A",
 };
 
 function useFetchData(selectedArea) {
@@ -16,75 +16,67 @@ function useFetchData(selectedArea) {
   //   console.log(APIKEY);
   //   console.log(selectedArea);
 
+  // const options = {
+  //   params: {
+  //     api_key: APIKEY,
+  //   },
+  // };
+
   useEffect(() => {
     console.log("fetching data");
-    async function getDataFromApi(seriesCode) {
-      const data = await axios.get(URL, {
-        params: {
-          api_key: APIKEY,
-          series_id: seriesCode,
-        },
-      });
-      if (data) {
-        console.log("RESULTS: ", data);
-        const dataObj = data.data.series[0];
-        // console.log("dataObj: ", dataObj);
+    // GET DATA ROM API FUNCTION
+    async function getDataFromApi(area) {
+      // API CALLS
+      console.log(area);
+      // INITIATE EMPTY ARRAY FOR DATA
+      let dataArray = [];
 
-        return {
-          units: dataObj.units,
-          data: dataObj.data,
-        };
-      } else {
-        // NO DATA FOUND
-        return false;
-      }
-    }
-    //  LOOP THROUGH CODES TO GET ALL DATA SET CODES
-    let dataArray = [];
-    Object.keys(codes).forEach((key) => {
-      const seriesId = getSeriesId(selectedArea[0], key);
-      // console.log("dataOBJ:", dataObj);
-
-      // console.log(seriesId);
-
-      // CHECK DATABASE IF CODE EXIST IN DB
-      const exists = checkData(key, selectedArea[0]);
-      if (exists) {
-        // RETURN DATA
-        console.log("document exists");
-      } else {
-        console.log("nope");
-        // GET DATA FROM API
-
-        getDataFromApi(seriesId).then((result) => {
-          // SAVE DATA TO DB
-          if (result) {
-            addData(key, selectedArea[0], result).then((savedRes) => {
-              // ADD DATA TO DATA OBJECT
-              let resObj = {
-                [key]: {
-                  [selectedArea[0]]: {
-                    units: result.units,
-                    data: [...result.data],
-                  },
-                },
+      // GET ALL API REQUESTS
+      await axios.all(
+        Object.keys(codes).map((key) =>
+          axios
+            .get(URL, {
+              params: {
+                api_key: APIKEY,
+                series_id: getSeriesId(area, key),
+              },
+            })
+            .then((res) => {
+              console.log("axios all: ", res);
+              // CREATE DATA OBJECT FOR EACH DATA SET
+              const { data, units } = res.data.series[0];
+              let dataObj = {
+                id: area,
+                key: key,
+                units: units,
+                data: data,
               };
-              dataArray.push(resObj);
-              console.log("DATA ARR: ", dataArray);
-              // console.log("obbbb: ", dataObj);
-            });
-          }
-        });
-        // console.log("API DATA: ", apiData);
-      }
-      //  IF TIMESTAMP OF DB ENTRY IS SMALLER THAN 1 WEEK
-      // TODO: GET DATA FROM DB
-      // TODO: ELSE GET DATA FROM API
-      //  SET DATA IN STATE
-    });
-  }, []);
+              dataArray.push(dataObj);
+            })
+        )
+      );
+      console.log("test array: ", dataArray);
 
-  function checkDB() {}
+      return dataArray;
+    }
+
+    let cachedResponse = false; //CHANGE TO BELOW AFTER TESTING
+    //  GET TIMESTAMP OF DATA IF EXISTS
+    // const cachedResponse = checkCachedTimestamp(selectedArea[0]);
+    console.log("localstorage response: ", cachedResponse);
+
+    if (cachedResponse) {
+      // GET DATA FROM DB
+    } else {
+      // ELSE RETRIEVE DATA FROM API
+      getDataFromApi(selectedArea[0]).then((data) => {
+        // ADD DATA TO DB
+        addDataToDB(data);
+      });
+    }
+
+    // console.log("cached response: ", cachedResponse);
+  }, []);
 
   function saveDataInDB() {}
 
