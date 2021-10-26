@@ -9,29 +9,52 @@ import EnergyBreakdownChart from "./components/EnergyBreakdown/EnergyBreakdownCh
 import CoEmissionsChart from "./components/CoEmissionsChart/CoEmissionsChart";
 // Import hooks
 import useFetchData from "./Services/useFetchData";
+// import useSearchInput from "./Services/useSearchInput";
 
 function App() {
   const [selectedArea, setSelectedArea] = useState(["WORL"]);
   const { data } = useFetchData(selectedArea);
+
+  // console.log("DATA IN APP: ", data);
+
+  // const {
+  //   searchInput,
+  //   setSearchInput,
+  //   selectedSearch,
+  //   searchList,
+  //   handleAreaSelect,
+  // } = useSearchInput(setSelectedArea);
+  console.log("DATA IN COMPONENT: ", data);
+  console.log("SELECTED AREA: ", selectedArea);
+
   return (
     <div className="App">
       <div className="search-container">
-        <SearchInput />
+        <SearchInput setSelectedArea={setSelectedArea} />
       </div>
-      <div className="total-energy-container">
-        <TotalEnergyChart />
-      </div>
-      <div className="energy-sources-container">
-        <div className="renewable-energy-container">
-          <RenewableEnergyChart />
-        </div>
-        <div className="energy-breakdown-container">
-          <EnergyBreakdownChart />
-        </div>
-      </div>
-      <div className="co2-emmisions-container">
-        <CoEmissionsChart />
-      </div>
+
+      {data && (
+        <>
+          <div className="total-energy-container">
+            <TotalEnergyChart
+              totalElectricity={data[1]}
+              totalPopulation={data[0]}
+              data={data}
+            />
+          </div>
+          <div className="energy-sources-container">
+            <div className="renewable-energy-container">
+              <RenewableEnergyChart />
+            </div>
+            <div className="energy-breakdown-container">
+              <EnergyBreakdownChart />
+            </div>
+          </div>
+          <div className="co2-emmisions-container">
+            <CoEmissionsChart />
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -5,3 +5,26 @@
   line-height: 40px;
   font-size: 30px;
 }
+
+.search-results {
+  position: absolute;
+  width: 80%;
+  margin: auto;
+  padding: 0;
+  left: 10%;
+  list-style-type: none;
+  text-align: left;
+  z-index: 999;
+  line-height: 20px;
+  background-color: white;
+}
+
+.search-item {
+  font-size: 120%;
+  margin-top: 5px;
+}
+
+.search-item:hover {
+  background-color: rgb(153, 218, 255);
+  cursor: pointer;
+}

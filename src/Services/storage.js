@@ -2,28 +2,26 @@ import Localbase from "localbase";
 
 let db = new Localbase("energy-app");
 
-export function checkData(area) {
-  // console.log(key);
-  console.log(area);
-
-  // CHECK IF DATA IS IN DB
-  // db.collection(key)
-  //   .doc({ id: area })
-  //   .get()
-  //   .then((document) => {
-  //     //  IF DOCUMENT EXISTS
-  //     if (document) {
-  //       console.log(document);
-  //       return true;
-  //     } else {
-  //       // DOCUMENT DOES NOT EXIST
-  //       return false;
-  //     }
-  //   });
-
-  //  CHECK IF TIMESTAMP LESS THAN A WEEK
-  // IF DATA EXISTS, RETURN DATA
-  // IF DATA DOES NOT EXIST, RETURN FALSE
+export async function getDataFromDB(area, collections) {
+  // const data = await db.collection()
+  console.log("area: ", area);
+  console.log("collections: ", collections);
+  let dataArray = [];
+  for (let i = 0; i < collections.length; i++) {
+    try {
+      const data = await db.collection(collections[i]).doc({ id: area }).get();
+      data.id = collections[i];
+      // console.log("dataset: ", data.data.reverse());
+      data.data.reverse();
+      // data.data = data.reverse();
+      dataArray.push(data);
+      // console.log("get data: ", data);
+    } catch (err) {
+      console.log("error in getting data: ", err);
+    }
+  }
+  console.log("all data: ", dataArray);
+  return dataArray;
 }
 
 export async function addDataToDB(dataArray) {
@@ -31,47 +29,53 @@ export async function addDataToDB(dataArray) {
   console.log("data: ", dataArray);
 
   // LOOP TROUGH ARRAY AND SAVE DATA TO DB
-  dataArray.forEach(async (entry) => {
+  for (let i = 0; i < dataArray.length; i++) {
     // CHECK IF COLLECTION EXISTS
-    const data = await db.collection(entry.key).get({ id: entry.id });
-    console.log("data o: ", data);
+    const data = await db
+      .collection(dataArray[i]["key"])
+      .doc({ id: dataArray[i]["id"] })
+      .get();
 
-    if (data.length > 0) {
-      // OVERWRITE DATA TO DB
+    // IF DATA IS UNDEFINED, AN NEW ENTRY NEEDS TO BE ADDED OTHERWISE IT NEEDS TO UPDATE
+    if (data !== undefined) {
+      console.log("not undefined");
+
+      // OVERWRITE DATA  DB
       try {
         await db
-          .collection(entry.key)
-          .doc({ id: entry.id })
+          .collection(dataArray[i]["key"])
+          .doc({ id: dataArray[i]["id"] })
           .set({
-            id: entry.id,
-            unit: entry.units,
-            data: [...entry.data],
+            id: dataArray[i]["id"],
+            unit: dataArray[i]["units"],
+            data: [...dataArray[i]["data"]],
           });
-        console.log("done setting data");
+        console.log("done updating data");
 
-        // return true;
+        return true;
       } catch (er) {
-        console.log("error: ", er);
+        console.log("error in not null: ", er);
         return false;
       }
     } else {
       // ADD DATA TO DB
-      // SAVE DATA TO DB
       try {
-        await db.collection(entry.key).add({
-          id: entry.id,
-          unit: entry.units,
-          data: [...entry.data],
+        await db.collection(dataArray[i]["key"]).add({
+          id: dataArray[i]["id"],
+          unit: dataArray[i]["units"],
+          data: [...dataArray[i]["data"]],
         });
-        console.log("done setting data");
-
+        console.log("done adding data");
+        // return true;
         // return true;
       } catch (er) {
-        console.log("error: ", er);
+        console.log("error in null: ", er);
         return false;
       }
     }
-  });
+  }
+  // IF LOOP ENDED SUCCESFULLY, RETURN TRUE
+  return true;
 }
 
 export function checkCachedTimestamp(area) {
