@@ -5,8 +5,8 @@ import HighchartsReact from "highcharts-react-official";
 // Import hooks
 import useRenewableChart from "./useRenewableEnergyChart";
 
-function RenewableEnergyChart() {
-  const { options } = useRenewableChart();
+function RenewableEnergyChart(props) {
+  const { options } = useRenewableChart(props);
 
   return (
     <div>

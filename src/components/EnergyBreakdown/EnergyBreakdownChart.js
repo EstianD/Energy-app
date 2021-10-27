@@ -5,8 +5,8 @@ import HighchartsReact from "highcharts-react-official";
 // Import hooks
 import useEnergyBreakdownChart from "./useEnergyBreakdownChart";
 
-function EnergyBreakdownChart() {
-  const { options } = useEnergyBreakdownChart();
+function EnergyBreakdownChart(props) {
+  const { options } = useEnergyBreakdownChart(props);
 
   return (
     <div>

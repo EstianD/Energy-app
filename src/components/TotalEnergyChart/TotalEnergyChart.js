@@ -9,11 +9,6 @@ function TotalEnergyChart(props) {
   const { options } = useTotalEnergyChart(props);
   console.log("CHART OPTIONS: ", options);
 
-  useEffect(() => {
-    console.log("PROPS UPDATED");
-    console.log("CHART OPTIONS: ", options);
-  }, [props]);
-
   return (
     <div>
       <HighchartsReact

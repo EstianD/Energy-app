@@ -88,6 +88,7 @@ function useTotalEnergyChart(props) {
     ],
   };
   // console.log(chartOptions);
+  console.log("PROPS: ", props);
 
   const { totalElectricity, totalPopulation } = props;
 

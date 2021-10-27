@@ -21,6 +21,7 @@ const codes = {
   geothermal: "INTL.35-12-CODE-BKWH.A ",
   biomass: "INTL.38-12-CODE-BKWH.A",
   coTwo: "INTL.4008-8-CODE-MMTCD.A",
+  nuclear: "INTL.27-12-CODE-BKWH.A",
 };
 
 function useFetchData(selectedArea) {
@@ -39,7 +40,7 @@ function useFetchData(selectedArea) {
     // GET DATA ROM API FUNCTION
     async function getDataFromApi(area) {
       // API CALLS
-      console.log(area);
+      // console.log(area);
       // INITIATE EMPTY ARRAY FOR DATA
       let dataArray = [];
 
@@ -54,7 +55,7 @@ function useFetchData(selectedArea) {
               },
             })
             .then((res) => {
-              console.log("axios all: ", res);
+              // console.log("axios all: ", res);
               // CREATE DATA OBJECT FOR EACH DATA SET
               const { data, units } = res.data.series[0];
               let dataObj = {
@@ -67,7 +68,7 @@ function useFetchData(selectedArea) {
             })
         )
       );
-      console.log("test array: ", dataArray);
+      // console.log("test array: ", dataArray);
 
       return dataArray;
     }
@@ -81,7 +82,7 @@ function useFetchData(selectedArea) {
       // GET DATA FROM DB
       console.log("getting data");
       getDataFromDB(selectedArea[0], Object.keys(codes)).then((result) => {
-        console.log("response from get data from db: ", result);
+        // console.log("response from get data from db: ", result);
         setData([...result]);
       });
     } else {
@@ -97,7 +98,7 @@ function useFetchData(selectedArea) {
             Object.keys(codes)
           );
           setData([...dbData]);
-          console.log("db data: ", dbData);
+          // console.log("db data: ", dbData);
         } else {
           // SOMETHING WENT WRONG
           console.log("something went wrong in adding the data");

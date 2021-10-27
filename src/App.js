@@ -39,15 +39,28 @@ function App() {
             <TotalEnergyChart
               totalElectricity={data[1]}
               totalPopulation={data[0]}
-              data={data}
             />
           </div>
           <div className="energy-sources-container">
             <div className="renewable-energy-container">
-              <RenewableEnergyChart />
+              <RenewableEnergyChart
+                hydro={data[4]}
+                wind={data[3]}
+                solar={data[2]}
+                geothermal={data[6]}
+                biomass={data[7]}
+              />
             </div>
             <div className="energy-breakdown-container">
-              <EnergyBreakdownChart />
+              <EnergyBreakdownChart
+                fossilFuel={data[5]}
+                hydro={data[4]}
+                wind={data[3]}
+                solar={data[2]}
+                geothermal={data[6]}
+                biomass={data[7]}
+                nuclear={data[9]}
+              />
             </div>
           </div>
           <div className="co2-emmisions-container">

@@ -9,29 +9,23 @@ function useSearchInput(setSelectedArea) {
 
   useEffect(() => {
     if (searchInput !== "") {
-      console.log("search changing");
-      console.log(searchInput);
+      // console.log("search changing");
+      // console.log(searchInput);
       // console.log("country codes: ", countryCodes);
 
       const searchObject = countryCodes.filter((country) => {
         return country.name.toLowerCase().includes(searchInput.toLowerCase());
       });
       setSearchList([...searchObject]);
-      console.log("search Object: ", searchObject);
+      // console.log("search Object: ", searchObject);
     }
   }, [searchInput]);
-
-  const handleAreaSelect = function (countryCode) {
-    console.log(countryCode);
-    // setSelectedArea;
-  };
 
   return {
     searchInput,
     setSearchInput,
     selectedSearch,
     searchList,
-    handleAreaSelect,
   };
 }
 
