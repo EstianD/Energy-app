@@ -26,21 +26,15 @@ const codes = {
 
 function useFetchData(selectedArea) {
   const [data, setData] = useState(null);
-  //   console.log(APIKEY);
-  //   console.log(selectedArea);
-
-  // const options = {
-  //   params: {
-  //     api_key: APIKEY,
-  //   },
-  // };
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     console.log("fetching data");
+    setLoading(true);
+    setData(null);
     // GET DATA ROM API FUNCTION
     async function getDataFromApi(area) {
       // API CALLS
-      // console.log(area);
       // INITIATE EMPTY ARRAY FOR DATA
       let dataArray = [];
 
@@ -55,7 +49,6 @@ function useFetchData(selectedArea) {
               },
             })
             .then((res) => {
-              // console.log("axios all: ", res);
               // CREATE DATA OBJECT FOR EACH DATA SET
               const { data, units } = res.data.series[0];
               let dataObj = {
@@ -68,7 +61,6 @@ function useFetchData(selectedArea) {
             })
         )
       );
-      // console.log("test array: ", dataArray);
 
       return dataArray;
     }
@@ -84,6 +76,7 @@ function useFetchData(selectedArea) {
       getDataFromDB(selectedArea[0], Object.keys(codes)).then((result) => {
         // console.log("response from get data from db: ", result);
         setData([...result]);
+        setLoading(false);
       });
     } else {
       // ELSE RETRIEVE DATA FROM API
@@ -98,6 +91,7 @@ function useFetchData(selectedArea) {
             Object.keys(codes)
           );
           setData([...dbData]);
+          setLoading(false);
           // console.log("db data: ", dbData);
         } else {
           // SOMETHING WENT WRONG
@@ -119,7 +113,7 @@ function useFetchData(selectedArea) {
     return codes[seriesName].replace("CODE", countryCode);
   }
 
-  return { data };
+  return { data, loading };
 }
 
 export default useFetchData;

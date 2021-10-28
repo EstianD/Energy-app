@@ -93,6 +93,9 @@ function useRenewableChart(props) {
         },
       },
     ],
+    tooltip: {
+      shared: true,
+    },
 
     responsive: {
       rules: [

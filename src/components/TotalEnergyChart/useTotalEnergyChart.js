@@ -59,9 +59,9 @@ function useTotalEnergyChart(props) {
     legend: {
       layout: "vertical",
       align: "left",
-      x: 120,
+      x: 60,
       verticalAlign: "top",
-      y: 100,
+      y: 60,
       floating: true,
       backgroundColor:
         Highcharts.defaultOptions.legend.backgroundColor || // theme
@@ -73,6 +73,7 @@ function useTotalEnergyChart(props) {
         type: "column",
         yAxis: 1,
         data: [],
+        color: "#66c7f4",
         tooltip: {
           valueSuffix: "",
         },

@@ -13,17 +13,8 @@ import useFetchData from "./Services/useFetchData";
 
 function App() {
   const [selectedArea, setSelectedArea] = useState(["WORL"]);
-  const { data } = useFetchData(selectedArea);
+  const { data, loading } = useFetchData(selectedArea);
 
-  // console.log("DATA IN APP: ", data);
-
-  // const {
-  //   searchInput,
-  //   setSearchInput,
-  //   selectedSearch,
-  //   searchList,
-  //   handleAreaSelect,
-  // } = useSearchInput(setSelectedArea);
   console.log("DATA IN COMPONENT: ", data);
   console.log("SELECTED AREA: ", selectedArea);
 
@@ -32,7 +23,7 @@ function App() {
       <div className="search-container">
         <SearchInput setSelectedArea={setSelectedArea} />
       </div>
-
+      {loading && <p>Loading...</p>}
       {data && (
         <>
           <div className="total-energy-container">
