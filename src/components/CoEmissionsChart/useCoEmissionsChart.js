@@ -1,84 +1,86 @@
 import React, { useState, useEffect } from "react";
+import { colorCodes } from "../../colorCodes";
+import { capitalizeFirstLetter } from "../../Services/globalFunctions";
 
-const chartOptions = {
-  title: {
-    text: "Solar Employment Growth by Sector, 2010-2016",
-  },
+function useCoEmissionsChart(props) {
+  const [options, setOptions] = useState(null);
+  console.log("CO2 EMISSIONS: ", props);
+  console.log(Number(props["coalEmissions"]["data"][0][0]));
 
-  subtitle: {
-    text: "Source: thesolarfoundation.com",
-  },
-
-  yAxis: {
+  const chartOptions = {
     title: {
-      text: "Number of Employees",
+      text: "CO<sub>2</sub> Emissions by source",
     },
-  },
 
-  xAxis: {
-    accessibility: {
-      rangeDescription: "Range: 2010 to 2017",
+    subtitle: {
+      text: "Source: thesolarfoundation.com",
     },
-  },
 
-  legend: {
-    layout: "vertical",
-    align: "right",
-    verticalAlign: "middle",
-  },
-
-  plotOptions: {
-    series: {
-      label: {
-        connectorAllowed: false,
+    yAxis: {
+      title: {
+        text: `${props["coalEmissions"]["unit"]}`,
       },
-      pointStart: 2010,
     },
-  },
 
-  series: [
-    {
-      name: "Installation",
-      data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175],
+    xAxis: {
+      accessibility: {
+        // rangeDescription: "Range: 2010 to 2017",
+      },
     },
-    {
-      name: "Manufacturing",
-      data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434],
-    },
-    {
-      name: "Sales & Distribution",
-      data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387],
-    },
-    {
-      name: "Project Development",
-      data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227],
-    },
-    {
-      name: "Other",
-      data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111],
-    },
-  ],
 
-  responsive: {
-    rules: [
-      {
-        condition: {
-          maxWidth: 500,
+    legend: {
+      layout: "vertical",
+      align: "right",
+      verticalAlign: "middle",
+    },
+    tooltip: {
+      shared: true,
+    },
+    plotOptions: {
+      series: {
+        label: {
+          connectorAllowed: true,
         },
-        chartOptions: {
-          legend: {
-            layout: "horizontal",
-            align: "center",
-            verticalAlign: "bottom",
+        pointStart: Number(props["coalEmissions"]["data"][0][0]),
+      },
+    },
+
+    series: [],
+
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            legend: {
+              layout: "horizontal",
+              align: "center",
+              verticalAlign: "bottom",
+            },
           },
         },
-      },
-    ],
-  },
-};
+      ],
+    },
+  };
 
-function useCoEmissionsChart() {
-  const [options, setOptions] = useState(chartOptions);
+  useEffect(() => {
+    const dataArray = [];
+    Object.keys(props).forEach((source) => {
+      console.log(source);
+
+      dataArray.push({
+        name: capitalizeFirstLetter(props[source]["id"]),
+        data: [...props[source]["data"]],
+        color: colorCodes[props[source].id],
+      });
+    });
+
+    chartOptions["series"] = [...dataArray];
+
+    setOptions(chartOptions);
+  }, [props]);
 
   return { options };
 }

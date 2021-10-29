@@ -12,7 +12,10 @@ import useFetchData from "./Services/useFetchData";
 // import useSearchInput from "./Services/useSearchInput";
 
 function App() {
-  const [selectedArea, setSelectedArea] = useState(["WORL"]);
+  const [selectedArea, setSelectedArea] = useState({
+    areaCode: "WORL",
+    name: "World",
+  });
   const { data, loading } = useFetchData(selectedArea);
 
   console.log("DATA IN COMPONENT: ", data);
@@ -30,6 +33,7 @@ function App() {
             <TotalEnergyChart
               totalElectricity={data[1]}
               totalPopulation={data[0]}
+              selectedArea={selectedArea}
             />
           </div>
           <div className="energy-sources-container">
@@ -50,12 +54,16 @@ function App() {
                 solar={data[2]}
                 geothermal={data[6]}
                 biomass={data[7]}
-                nuclear={data[9]}
+                nuclear={data[8]}
               />
             </div>
           </div>
           <div className="co2-emmisions-container">
-            <CoEmissionsChart />
+            <CoEmissionsChart
+              coalEmissions={data[9]}
+              naturalGasEmissions={data[10]}
+              patroleumEmissions={data[11]}
+            />
           </div>
         </>
       )}

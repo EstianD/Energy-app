@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { colorCodes } from "../../colorCodes";
+import { capitalizeFirstLetter } from "../../Services/globalFunctions";
 
 function useRenewableChart(props) {
   const [options, setOptions] = useState(null);
@@ -58,39 +60,44 @@ function useRenewableChart(props) {
 
     series: [
       {
-        name: biomass.id,
+        name: capitalizeFirstLetter(biomass.id),
         data: [...totalBiomass],
         tooltip: {
           valueSuffix: " BkWh",
         },
+        color: colorCodes[biomass.id],
       },
       {
-        name: hydro.id,
+        name: capitalizeFirstLetter(hydro.id),
         data: [...totalhydro],
         tooltip: {
           valueSuffix: " BkWh",
         },
+        color: colorCodes[hydro.id],
       },
       {
-        name: solar.id,
+        name: capitalizeFirstLetter(solar.id),
         data: [...totalSolar],
         tooltip: {
           valueSuffix: " BkWh",
         },
+        color: colorCodes[solar.id],
       },
       {
-        name: wind.id,
+        name: capitalizeFirstLetter(wind.id),
         data: [...totalWind],
         tooltip: {
           valueSuffix: " BkWh",
         },
+        color: colorCodes[wind.id],
       },
       {
-        name: geothermal.id,
+        name: capitalizeFirstLetter(geothermal.id),
         data: [...totalGeothermal],
         tooltip: {
           valueSuffix: " BkWh",
         },
+        color: colorCodes[geothermal.id],
       },
     ],
     tooltip: {

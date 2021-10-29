@@ -5,8 +5,8 @@ import HighchartsReact from "highcharts-react-official";
 // Import hooks
 import useCoEmissionsChart from "./useCoEmissionsChart";
 
-function CoEmissionsChart() {
-  const { options } = useCoEmissionsChart();
+function CoEmissionsChart(props) {
+  const { options } = useCoEmissionsChart(props);
   return (
     <div>
       <HighchartsReact highcharts={Highcharts} options={options} />

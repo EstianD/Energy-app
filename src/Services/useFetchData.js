@@ -20,20 +20,24 @@ const codes = {
   fossilFuel: "INTL.28-12-CODE-BKWH.A ",
   geothermal: "INTL.35-12-CODE-BKWH.A ",
   biomass: "INTL.38-12-CODE-BKWH.A",
-  coTwo: "INTL.4008-8-CODE-MMTCD.A",
   nuclear: "INTL.27-12-CODE-BKWH.A",
+  coalEmissions: "INTL.1-8-CODE-MMTCD.A",
+  naturalGasEmissions: "INTL.3002-8-CODE-MMTCD.A",
+  patroleumEmissions: "INTL.4006-8-CODE-MMTCD.A",
 };
 
 function useFetchData(selectedArea) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log("SELECTED AREA: ", selectedArea);
+  const { areaCode } = selectedArea;
 
   useEffect(() => {
     console.log("fetching data");
     setLoading(true);
     setData(null);
     // GET DATA ROM API FUNCTION
-    async function getDataFromApi(area) {
+    async function getDataFromApi(areaCode) {
       // API CALLS
       // INITIATE EMPTY ARRAY FOR DATA
       let dataArray = [];
@@ -45,14 +49,14 @@ function useFetchData(selectedArea) {
             .get(URL, {
               params: {
                 api_key: APIKEY,
-                series_id: getSeriesId(area, key),
+                series_id: getSeriesId(areaCode, key),
               },
             })
             .then((res) => {
               // CREATE DATA OBJECT FOR EACH DATA SET
               const { data, units } = res.data.series[0];
               let dataObj = {
-                id: area,
+                id: areaCode,
                 key: key,
                 units: units,
                 data: data,
@@ -67,29 +71,27 @@ function useFetchData(selectedArea) {
 
     // let cachedResponse = false; //CHANGE TO BELOW AFTER TESTING
     //  GET TIMESTAMP OF DATA IF EXISTS
-    const cachedResponse = checkCachedTimestamp(selectedArea[0]);
+    const cachedResponse = checkCachedTimestamp(areaCode);
     console.log("localstorage response: ", cachedResponse);
 
     if (cachedResponse) {
       // GET DATA FROM DB
       console.log("getting data");
-      getDataFromDB(selectedArea[0], Object.keys(codes)).then((result) => {
+      getDataFromDB(areaCode, Object.keys(codes)).then((result) => {
         // console.log("response from get data from db: ", result);
         setData([...result]);
         setLoading(false);
       });
     } else {
       // ELSE RETRIEVE DATA FROM API
-      getDataFromApi(selectedArea[0]).then(async (data) => {
+      getDataFromApi(areaCode).then(async (data) => {
+        // const { areaCode } = selectedArea;
         // ADD DATA TO DB
         const addedData = await addDataToDB(data);
 
         // CHECK IF DATA WAS ADDED SUCCESSFULY
         if (addedData) {
-          const dbData = await getDataFromDB(
-            selectedArea[0],
-            Object.keys(codes)
-          );
+          const dbData = await getDataFromDB(areaCode, Object.keys(codes));
           setData([...dbData]);
           setLoading(false);
           // console.log("db data: ", dbData);
@@ -105,12 +107,12 @@ function useFetchData(selectedArea) {
     // console.log("cached response: ", cachedResponse);
   }, [selectedArea]);
 
-  function saveDataInDB() {}
+  // function saveDataInDB() {}
 
-  function fetchData(countryCode) {}
+  // function fetchData(countryCode) {}
 
-  function getSeriesId(countryCode, seriesName) {
-    return codes[seriesName].replace("CODE", countryCode);
+  function getSeriesId(areaCode, seriesName) {
+    return codes[seriesName].replace("CODE", areaCode);
   }
 
   return { data, loading };

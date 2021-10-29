@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import Highcharts from "highcharts";
+import { colorCodes } from "../../colorCodes";
+import { capitalizeFirstLetter } from "../../Services/globalFunctions";
 
 function useTotalEnergyChart(props) {
   const [options, setOptions] = useState(null);
+  console.log("TOTAL ENERGY PROPS: ", props);
 
   const chartOptions = {
     chart: {
       zoomType: "x",
     },
     title: {
-      text: "Total Electricity consumption and Population",
+      text: `Total Electricity consumption and Population <b>${props.selectedArea.name}</b>`,
     },
     subtitle: {
       text: "Source: eia.gov",
@@ -133,12 +136,18 @@ function useTotalEnergyChart(props) {
 
     // 5. series[1] = population
     chartOptions["series"][0]["data"] = [...populationData];
-    chartOptions["series"][0]["name"] = totalPopulation.id;
+    chartOptions["series"][0]["name"] = capitalizeFirstLetter(
+      totalPopulation.id
+    );
+    chartOptions["series"][0]["color"] = colorCodes[totalPopulation.id];
     chartOptions["series"][0]["tooltip"]["valueSuffix"] = " Thousand";
 
     // 4. series[0] = electricity
     chartOptions["series"][1]["data"] = [...electricityData];
-    chartOptions["series"][1]["name"] = totalElectricity.id;
+    chartOptions["series"][1]["name"] = capitalizeFirstLetter(
+      totalElectricity.id
+    );
+    chartOptions["series"][1]["color"] = colorCodes[totalElectricity.id];
     chartOptions["series"][1]["tooltip"]["valueSuffix"] = " BkWh";
 
     console.log(totalElectricity);

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-
+import { colorCodes } from "../../colorCodes";
+import { capitalizeFirstLetter } from "../../Services/globalFunctions";
 function useEnergyBreakdownChart(props) {
   const [options, setOptions] = useState(null);
+  console.log("colors: ", colorCodes);
 
   // const { biomass, fossilFuel, geothermal, hydro, solar, nuclear, wind } =
   // props;
@@ -40,45 +42,18 @@ function useEnergyBreakdownChart(props) {
       {
         name: "Energy",
         colorByPoint: true,
-        data: [
-          {
-            name: "Chrome",
-            y: 61.41,
-            // sliced: true,
-            // selected: true,
-          },
-          {
-            name: "Internet Explorer",
-            y: 11.84,
-          },
-          {
-            name: "Firefox",
-            y: 10.85,
-          },
-          {
-            name: "Edge",
-            y: 4.67,
-          },
-          {
-            name: "Safari",
-            y: 4.18,
-          },
-          {
-            name: "Other",
-            y: 7.05,
-          },
-        ],
+        data: [],
       },
     ],
-    colors: [
-      "#5d6370",
-      "#6d6dfa",
-      "#84ff69",
-      "#fff040",
-      "#bd2c0a",
-      "#7d8719",
-      "#b5b4b4",
-    ],
+    // colors: [
+    //   "#5d6370",
+    //   "#6d6dfa",
+    //   "#84ff69",
+    //   "#fff040",
+    //   "#bd2c0a",
+    //   "#7d8719",
+    //   "#b5b4b4",
+    // ],
     responsive: {
       rules: [
         {
@@ -126,13 +101,15 @@ function useEnergyBreakdownChart(props) {
         props[source].data[props[source].data.length - 1][1]
       );
       let sourcePerc = Number(((sourceValue / totalEnergy) * 100).toFixed(1));
+      console.log("PERC: ", props[source]);
 
       // PUSH DATA TO ARRAY FOR THE SERIES
-      console.log(source);
+      // console.log(source);
 
       dataArray.push({
-        name: source,
+        name: capitalizeFirstLetter(source),
         y: sourcePerc,
+        color: `${colorCodes[source]}`,
       });
     });
 

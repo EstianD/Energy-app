@@ -23,9 +23,13 @@ function SearchInput({ setSelectedArea }) {
     }
   }, [searchInput]);
 
-  function handleSearchSelect(areaCode) {
-    console.log("area selected: ", areaCode);
-    setSelectedArea([areaCode]);
+  function handleSearchSelect(selected) {
+    console.log("area selected: ", selected);
+    setSelectedArea({
+      areaCode: selected["alpha-3"],
+      name: selected["name"],
+    });
+
     setSearchInput("");
   }
 
@@ -41,7 +45,7 @@ function SearchInput({ setSelectedArea }) {
             return (
               <li
                 className="search-item"
-                onClick={() => handleSearchSelect(country["alpha-3"])}
+                onClick={() => handleSearchSelect(country)}
               >
                 {country.name}
               </li>

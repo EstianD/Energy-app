@@ -1,0 +1,15 @@
+export const colorCodes = {
+  fossilFuel: "#343835",
+  solar: "#fff959",
+  biomass: "#466e49",
+  coTwo: "#000000",
+  electricity: "#f01d1d",
+  geothermal: "#6b3b0b",
+  hydro: "#1cb1d6",
+  nuclear: "#e3e3e3",
+  population: "#7e8af2",
+  wind: "#50f037",
+  naturalGasEmissions: "#96568f",
+  coalEmissions: "#000000",
+  patroleumEmissions: "#005C67",
+};
