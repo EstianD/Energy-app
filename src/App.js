@@ -21,6 +21,10 @@ function App() {
   console.log("DATA IN COMPONENT: ", data);
   console.log("SELECTED AREA: ", selectedArea);
 
+  useEffect(() => {
+    console.log('mounting')
+  }, [])
+
   return (
     <div className="App">
       <div className="search-container">
